@@ -143,8 +143,10 @@ def log_result(step, ok, ms):
                     "OK" if ok else "FAIL", "" if ms is None else ms])
 
 
-def main():
-    gateway = get_default_gateway()
+def main(gateway=None):
+    """Диагностика. Возвращает 0, если все шаги успешны, иначе 1."""
+    if gateway is None:
+        gateway = get_default_gateway()
     if gateway is None:
         gateway = input("Шлюз не определён. Введите IP шлюза: ").strip()
     print(f"Локальный IP: {get_local_ip()}   Шлюз: {gateway}\n")
@@ -165,9 +167,10 @@ def main():
             print(f"\nДиагностика остановлена. Проблема на уровне: {name}")
             for tip in ADVICE.get(name, []):
                 print("  -", tip)
-            return
+            return 1
     print("\nВсе уровни работают.")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

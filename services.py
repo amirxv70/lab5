@@ -52,13 +52,14 @@ def check_service(name, host, port, timeout=3):
     return result
 
 
-def check_all_sequential(services):
-    return [check_service(*s) for s in services]
+def check_all_sequential(services, timeout=3):
+    return [check_service(*s, timeout=timeout) for s in services]
 
 
-def check_all_parallel(services, workers=10):
+def check_all_parallel(services, workers=10, timeout=3):
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        return list(pool.map(lambda s: check_service(*s), services))
+        return list(pool.map(lambda s: check_service(*s, timeout=timeout),
+                             services))
 
 
 def print_table(results):
